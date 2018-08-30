@@ -10,13 +10,11 @@ export default {
     try {
 
       const { matchName, candidateName, matchImg, candidateImg } = req.body
-
       let candidate = await Candidate.insertMany(req.body)
-
       res.status(200).send(candidate[0])
 
     } catch (err) {
-
+      res.status(200).send({err})
     }
 
   },
@@ -26,13 +24,13 @@ export default {
     try {
 
       let totalVoter = await Voter.find({})
-
       var candidateList = await Candidate.find({})
 
       candidateList.forEach(item => {
         let porcentage = (100 * item.totalVote) / totalVoter.length
         item.set('porcentage', isNaN(porcentage) ? 0 : porcentage, { strict: false })
       })
+      
       res.status(200).send(candidateList)
 
     } catch (err) {

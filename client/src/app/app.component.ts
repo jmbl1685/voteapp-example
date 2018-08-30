@@ -12,8 +12,9 @@ import { Ng2IzitoastService } from 'ng2-izitoast';
 })
 export class AppComponent implements OnInit {
 
-  title = 'app';
   candidateList: Array<any> = [];
+
+  btn_vote: boolean = true;
 
   voter: any = {
     name: "",
@@ -22,12 +23,10 @@ export class AppComponent implements OnInit {
     birthdate: ""
   };
 
-  btn_vote: boolean = true;
-
   settings_candidatelist: any = {
     opacity: 0.5,
     disable: true
-  }
+  };
 
   constructor(
     private candidateService: CandidateService,
@@ -42,11 +41,8 @@ export class AppComponent implements OnInit {
 
     this.socketservice.onSocket().subscribe(
       res => {
-
-        if (res.option == 'vote') {
+        if (res.option == 'vote')
           this.GetCandidate();
-        }
-
       },
       err => {
         console.log(err)
@@ -57,7 +53,7 @@ export class AppComponent implements OnInit {
 
   GetCandidate() {
     this.candidateService.GetCandidate().subscribe(res => {
-      this.candidateList = res
+      this.candidateList = res;
     })
   }
 
@@ -76,34 +72,16 @@ export class AppComponent implements OnInit {
       res => {
         this.FieldsClean();
 
-        this.iziToast.show({
-          id: 'haduken',
-          theme: 'dark',
-          title: 'Notificación',
-          message: '<b>Gracias por votar</b>',
-          position: 'topCenter',
-          transitionIn: 'flipInX',
-          transitionOut: 'flipOutX',
-          progressBarColor: 'rgb(0, 255, 184)',
-          image: '/assets/img/SUCCESS.png',
-          imageWidth: 70,
-          layout: 2,
-          backgroundColor: '#0275D8',
-          onClosing: function () {
-            console.info('onClosing');
-          },
-          onClosed: function (instance, toast, closedBy) {
-            console.info('Closed | closedBy: ' + closedBy);
-          }
-        });
+        this.ShowNotification(
+          '<b>Gracias por votar</b>',
+          '/assets/img/SUCCESS.png',
+          '#0275D8')
 
         this.socketservice.Vote(res);
       },
       err => {
-
         const error = err.error.err;
         this.VoteHandleError(error);
-
       }
     )
   }
@@ -124,61 +102,57 @@ export class AppComponent implements OnInit {
   VoteHandleError(error) {
 
     switch (error.name) {
-      case "ValidationError":
 
-        this.iziToast.show({
-          id: 'haduken',
-          theme: 'dark',
-          title: 'Notificación',
-          message: '<b>Ha ocurrido un error</b>',
-          position: 'topCenter',
-          transitionIn: 'flipInX',
-          transitionOut: 'flipOutX',
-          progressBarColor: 'rgb(0, 255, 184)',
-          image: '/assets/img/ERROR.png',
-          imageWidth: 70,
-          layout: 2,
-          backgroundColor: '#D9534F',
-          onClosing: function () {
-            console.info('onClosing');
-          },
-          onClosed: function (instance, toast, closedBy) {
-            console.info('Closed | closedBy: ' + closedBy);
-          }
-        });
+      case "ValidationError": {
 
+        this.ShowNotification(
+          '<b>Ha ocurrido un error</b>',
+          '/assets/img/ERROR.png',
+          '#D9534F'
+        );
         break;
-      case "BulkWriteError":
+
+      }
+
+      case "BulkWriteError": {
         if (error.errmsg.includes('E11000 duplicate key error index: mongod.voters.$identification_1 dup key')) {
 
-          this.iziToast.show({
-            id: 'haduken',
-            theme: 'dark',
-            title: 'Notificación',
-            message: '<b>Este usuario ya ejerció su derecho al voto.</b>',
-            position: 'topCenter',
-            transitionIn: 'flipInX',
-            transitionOut: 'flipOutX',
-            progressBarColor: 'rgb(0, 255, 184)',
-            image: '/assets/img/ERROR.png',
-            imageWidth: 70,
-            layout: 2,
-            backgroundColor: '#0275D8',
-            onClosing: function () {
-              console.info('onClosing');
-            },
-            onClosed: function (instance, toast, closedBy) {
-              console.info('Closed | closedBy: ' + closedBy);
-            }
-          });
-
-          return
+          this.ShowNotification(
+            '<b>Este usuario ya ejerció su derecho al voto.</b>',
+            '/assets/img/ERROR.png',
+            '#0275D8'
+          );
         }
         break;
+
+      }
       default:
         break;
     }
 
+  }
+
+  ShowNotification(_message, _img, _bgColor) {
+    this.iziToast.show({
+      id: 'haduken',
+      theme: 'dark',
+      title: 'Notificación',
+      message: _message,
+      position: 'topCenter',
+      transitionIn: 'flipInX',
+      transitionOut: 'flipOutX',
+      progressBarColor: 'rgb(0, 255, 184)',
+      image: _img,
+      imageWidth: 70,
+      layout: 2,
+      backgroundColor: _bgColor,
+      onClosing: function () {
+        console.info('onClosing');
+      },
+      onClosed: function (instance, toast, closedBy) {
+        console.info('Closed | closedBy: ' + closedBy);
+      }
+    });
   }
 
   FieldsClean() {
