@@ -1,0 +1,127 @@
+<div class="mt-4">
+  <div>
+    <h1 class="text-center title">Elecciones 2019</h1>
+  </div>
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-sm-12 col-md-12 col-xl-6 col-lg-6">
+
+        <div class="card">
+          <div class="card-body text-dark">
+            <form id="form" #form="ngForm" (ngSubmit)="VoteActivate()">
+              <div class="form-group">
+                <label for="email">Nombre Completo</label>
+                <input (input)="Change($event)" name="name" [(ngModel)]="voter.name" type="text" class="form-control"
+                  id="name" placeholder="Enter your email" placeholder="Ingrese su nombre">
+              </div>
+              <div class="form-group">
+                <label for="password">Identificación</label>
+                <input (input)="Change($event)" name="identification" [(ngModel)]="voter.identification" type="text"
+                  class="form-control" id="password" placeholder="Enter your password" placeholder="Ingrese su identificación">
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlSelect2">Sexo</label>
+                <select (input)="Change($event)" name="name" [(ngModel)]="voter.gender" class="form-control" id="exampleFormControlSelect2">
+                  <option value="Male">Masculino</option>
+                  <option value="Female">Femenino</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="password">Fecha de Nacimiento</label>
+                <input (input)="Change($event)" name="birthdate" [(ngModel)]="voter.birthdate" type="text" class="form-control"
+                  id="password" placeholder="MM/dd/yyyy">
+              </div>
+              <button type="submit" [disabled]="btn_vote" class="btn btn-success btn-block btn-lg mb-2">Votar</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="card mb-3 mt-3" [ngStyle]="{'opacity': settings_candidatelist.opacity }" *ngFor="let c of candidateList">
+          <div class="card-body">
+
+            <div class="card-body text-center">
+              <img [src]="c.matchImg" alt="Patrick Langston" class="img-fluid mb-2" width="96" height="96">
+              <img [src]="c.candidateImg" alt="Patrick Langston" class="img-fluid mb-2" width="96" height="96">
+              <h4 class="card-title mb-0">{{c.candidateName}}</h4>
+              <div class="text-muted mb-2">{{c.matchName}}</div>
+
+              <div>
+
+                <button [disabled]="settings_candidatelist.disable" (click)="Vote(c._id)" class="btn btn-success btn-sm">Votar
+                  por {{c.candidateName}}</button>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+      <div class="col-sm-12 col-md-12 col-xl-6 col-lg-6 ">
+
+        <div class="card mb-3 mt-3" *ngFor="let c of candidateList">
+          <div class="card-body">
+
+            <div class="card-body text-center">
+              <img [src]="c.matchImg" alt="Patrick Langston" class="img-fluid mb-2" width="96" height="96">
+              <img [src]="c.candidateImg" alt="Patrick Langston" class="img-fluid mb-2" width="96" height="96">
+              <h4 class="card-title mb-0">{{c.candidateName}}</h4>
+              <div class="text-muted mb-2">{{c.matchName}}</div>
+              <time class="text-muted text-sm"> Número de votos: {{c.totalVote}}</time>
+
+              <div>
+
+                <div class="progress mt-2 height-30">
+                  <div class="progress-bar bg-warning" role="progressbar" [ngStyle]="{'width': c.porcentage+'%' }"
+                    aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
+                    <b class="porcentage-text">{{c.porcentage | number:'1.0-1' }}% votos</b></div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- <div class="card mb-3" *ngFor="let c of candidateList">
+          <div class="card-body">
+
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-12 col-md-6 col-xl-6 col-lg-6">
+                  <div style="text-align: center !important;">
+                    <img [src]="c.matchImg" width="100" height="100" class="mr-3"><br><br>
+                    <img [src]="c.candidateImg" width="100" height="100" class="mr-3">
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-6 col-xl-6 col-lg-6">
+
+                  <div class="media-body col-12">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="mt-0">{{c.matchName}}</h6>
+                      <time class="text-muted text-sm"> Votos: {{c.totalVote}}</time>
+                    </div>
+                    {{c.candidateName}}
+                    <div class="progress mt-2 height-30">
+                      <div class="progress-bar bg-info" role="progressbar" [ngStyle]="{'width': c.porcentage+'%' }"
+                        aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
+                        <b class="porcentage-text">{{c.porcentage | number:'1.0-1' }}% votos</b></div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div> -->
+
+      </div>
+    </div>
+  </div>
+</div>

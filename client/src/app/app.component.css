@@ -1,0 +1,18 @@
+.general-container{
+  margin: 10px;
+}
+
+.title{
+  font-family: 'Anton', sans-serif;
+  color: #F74E1E;
+}
+
+.porcentage-text{
+  color: black; 
+  margin-left: 5px; 
+  font-size: 13px;
+}
+
+.height-30{
+  height: 30px;
+}
